@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="styles.css">
+    <title>Painel do RPG</title>
+
+     <!-- Favicon e cores -->
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="theme-color" content="#ffffff">
+</head>
+<body>
+
+     <!-- Music -->
+
+    <audio id="bgmusic" autoplay loop muted>
+        <source src="HBHB.mp3" type="audio/mp3">
+    </audio>
+
+    <!-- TELA DE LOGIN -->
+    <div id="telaLogin" class="container">
+        <h2>Se lembra do seu contrato?</h2>
+        <form id="formLogin">
+            <input type="text" id="usuario" placeholder="Nome do Jogador" required>
+            <input type="password" id="senha" placeholder="Senha do Jogador" required>
+            <button type="submit">Malfeito, feito</button>
+        </form>
+    </div>
+
+    <!-- TELA DO JOGADOR (FLASHCARD) -->
+    <div id="telaPainel" class="container oculto">
+        <div class="flashcard">
+            <h2 id="cardNome">Nome</h2>
+            <div id="cardClasse" class="classe">Classe</div>
+            
+          <div class="status-group">
+    <div class="status-item">
+        <span>Força:</span>
+        <input type="number" id="valForca" min="0">
+    </div>
+
+    <div class="status-item">
+        <span>Destreza:</span>
+        <input type="number" id="valDestreza" min="0">
+    </div>
+
+    <div class="status-item">
+        <span>Inteligência:</span>
+        <input type="number" id="valInteligencia" min="0">
+    </div>
+
+    <div class="status-item">
+        <span>Pontos de Vida:</span>
+        <input type="number" id="valVida" min="0">
+    </div>
+</div>
+        </div>
+        <button onclick="fazerLogout()" style="margin-top: 20px; background-color: #4b5563;">Sair</button>
+    </div>
+
+    <script>
+        // BANCO DE DADOS (Cadastrado manualmente ) ( Obs: Trocar nome status)
+        const bancoPersonagens = {
+            "arthur": {
+                senha: "123",
+                nome: "Arthur Pendragon",
+                classe: "Guerreiro / Paladino",
+                status: { HP: 18, Mente: 12, Vitalidade: 10, Consistencia: 55 }
+            },
+            "gandalf": {
+                senha: "456",
+                nome: "Gandalf, o Cinzento",
+                classe: "Mago Istari",
+                status: { forca: 10, destreza: 14, inteligencia: 20, vida: 35 }
+            },
+            "legolas": {
+                senha: "789",
+                nome: "Legolas Greenleaf",
+                classe: "Arqueiro Elfo",
+                status: { forca: 12, destreza: 19, inteligencia: 11, vida: 42 }
+            }
+        };
+
+        // Elementos da página
+        const formLogin = document.getElementById('formLogin');
+        const telaLogin = document.getElementById('telaLogin');
+        const telaPainel = document.getElementById('telaPainel');
+
+        // Evento de Login
+        formLogin.addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const usuarioDigitado = document.getElementById('usuario').value.toLowerCase().trim();
+            const senhaDigitada = document.getElementById('senha').value;
+
+            // Verifica se o usuário existe no código
+            const personagem = bancoPersonagens[usuarioDigitado];
+
+            if (personagem && personagem.senha === senhaDigitada) {
+                carregarPersonagem(personagem);
+            } else {
+                alert("Jogador ou senha incorretos.");
+            }
+        });
+
+        // Preenche o flashcard dinamicamente
+        function carregarPersonagem(p) {
+    document.getElementById('cardNome').innerText = p.nome;
+    document.getElementById('cardClasse').innerText = p.classe;
+
+    document.getElementById('valForca').value = p.status.forca;
+    document.getElementById('valDestreza').value = p.status.destreza;
+    document.getElementById('valInteligencia').value = p.status.inteligencia;
+    document.getElementById('valVida').value = p.status.vida;
+
+    // Alterna as telas
+    telaLogin.classList.add('oculto');
+    telaPainel.classList.remove('oculto');
+
+
+            // Alterna as telas mudando a classe CSS
+            telaLogin.classList.add('oculto');
+            telaPainel.classList.remove('oculto');
+        }
+
+        // Evento de Logout
+        function fazerLogout() {
+            document.getElementById('formLogin').reset();
+            telaPainel.classList.add('oculto');
+            telaLogin.classList.remove('oculto');
+        }
+
+        // Música ao clicar
+
+        window.addEventListener("click", () => {
+            const music = document.getElementById("bgmusic");
+            music.muted = false;
+            music.play();
+           } ) 
+    </script>
+</body>
+</html>
