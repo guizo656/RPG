@@ -58,3 +58,65 @@
             padding-bottom: 4px;
         }
         .oculto { display: none; }
+
+
+        /* --- CONFIGURAÇÃO PARA MOBILE (SEM ALTERAR CORES) --- */
+
+/* Garante que tudo use a matemática certa de tamanho */
+* {
+    box-sizing: border-box;
+}
+
+/* Evita o clique azul chato em telas touch */
+input, button {
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Esconder elementos com a classe oculto */
+.oculto {
+    display: none !important;
+}
+
+/* Ajustes estruturais que ativam APENAS em telas menores (Celulares) */
+@media (max-width: 600px) {
+    body {
+        padding: 12px;
+    }
+
+    .container {
+        width: 100%;
+        max-width: 100%;
+        padding: 16px;
+    }
+
+    /* Aumenta os botões e inputs para facilitar o toque no celular */
+    input[type="text"],
+    input[type="password"],
+    button {
+        padding: 14px !important;
+        font-size: 16px !important; /* Impede o zoom automático do iOS ao focar */
+    }
+
+    /* Cria duas colunas para os atributos no celular */
+    .status-group {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    /* Ajusta cada caixinha de status */
+    .status-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 8px;
+    }
+
+    .status-item input[type="number"] {
+        width: 100%;
+        max-width: 70px;
+        text-align: center;
+        padding: 6px;
+        font-size: 18px;
+    }
+}

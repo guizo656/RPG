@@ -3,99 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css">
     <title>Painel do RPG</title>
 
-     <!-- Favicon e cores -->
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="theme-color" content="#ffffff">
 </head>
 <body>
 
-     <!-- Music -->
-
-    <audio id="bgmusic" autoplay loop muted>
-        <source src="HBHB.mp3" type="audio/mp3">
+    <audio id="bgmusic" autoplay muted>
+        <source src="revirie.mp3" type="audio/mp3">
     </audio>
 
-    <!-- TELA DE LOGIN -->
     <div id="telaLogin" class="container">
         <h2>Se lembra do seu contrato?</h2>
         <form id="formLogin">
-            <input type="text" id="usuario" placeholder="Nome do Jogador" required>
+            <input type="text" id="usuario" placeholder="Nome do Jogador" autocapitalize="none" required>
             <input type="password" id="senha" placeholder="Senha do Jogador" required>
             <button type="submit">Malfeito, feito</button>
         </form>
     </div>
 
-    <!-- TELA DO JOGADOR (FLASHCARD) -->
     <div id="telaPainel" class="container oculto">
         <div class="flashcard">
             <h2 id="cardNome">Nome</h2>
             <div id="cardClasse" class="classe">Classe</div>
             
-          <div class="status-group">
-    <div class="status-item">
-        <span>Força:</span>
-        <input type="number" id="valForca" min="0">
-    </div>
+            <div class="status-group">
+                <div class="status-item">
+                    <span>HP:</span>
+                    <input type="number" id="valHP" min="0" inputmode="numeric" pattern="[0-9]*">
+                </div>
 
-    <div class="status-item">
-        <span>Destreza:</span>
-        <input type="number" id="valDestreza" min="0">
-    </div>
+                <div class="status-item">
+                    <span>Mente:</span>
+                    <input type="number" id="valMente" min="0" inputmode="numeric" pattern="[0-9]*">
+                </div>
 
-    <div class="status-item">
-        <span>Inteligência:</span>
-        <input type="number" id="valInteligencia" min="0">
-    </div>
+                <div class="status-item">
+                    <span>Constituição:</span>
+                    <input type="number" id="valConstituicao" min="0" inputmode="numeric" pattern="[0-9]*">
+                </div>
 
-    <div class="status-item">
-        <span>Pontos de Vida:</span>
-        <input type="number" id="valVida" min="0">
-    </div>
-</div>
+                <div class="status-item">
+                    <span>Vitalidade:</span>
+                    <input type="number" id="valVitalidade" min="0" inputmode="numeric" pattern="[0-9]*">
+                </div>
+
+                <div class="status-item">
+                    <span>Sorte:</span>
+                    <input type="number" id="valSorte" min="0" inputmode="numeric" pattern="[0-9]*">
+                </div>
+
+                <div class="status-item">
+                    <span>Velocidade:</span>
+                    <input type="number" id="valVelocidade" min="0" inputmode="numeric" pattern="[0-9]*">
+                </div>
+            </div>
         </div>
         <button onclick="fazerLogout()" style="margin-top: 20px; background-color: #4b5563;">Sair</button>
     </div>
 
     <script>
-        // BANCO DE DADOS (Cadastrado manualmente ) ( Obs: Trocar nome status)
+        // BANCO DE DADOS 
         const bancoPersonagens = {
-            "arthur": {
-                senha: "123",
-                nome: "Arthur Pendragon",
-                classe: "Guerreiro / Paladino",
-                status: { HP: 18, Mente: 12, Vitalidade: 10, Consistencia: 55 }
+            "pisca": { 
+                senha: "maconha",
+                nome: "Pisca de Marco",
+                classe: "DPS | Vidro",
+                status: { HP: 0, Mente: 0, Pools: 0, Vitalidade: 0, Sorte: 0, Velocidade: 0 }
             },
-            "gandalf": {
-                senha: "456",
-                nome: "Gandalf, o Cinzento",
-                classe: "Mago Istari",
-                status: { forca: 10, destreza: 14, inteligencia: 20, vida: 35 }
+            "gelado": {
+                senha: "geladinho",
+                nome: "Gelado",
+                classe: "A definir",
+                status: { HP: 0, Mente: 0, Pools: 0, Vitalidade: 0, Sorte: 0, Velocidade: 0 }
             },
-            "legolas": {
-                senha: "789",
-                nome: "Legolas Greenleaf",
-                classe: "Arqueiro Elfo",
-                status: { forca: 12, destreza: 19, inteligencia: 11, vida: 42 }
+            "kendiine": {
+                senha: "3x4",
+                nome: "Kendiine",
+                classe: "Sustainer | Raio roxo",
+                status: { HP: 0, Mente: 0, Pools: 0, Vitalidade: 0, Sorte: 0, Velocidade: 0  }
+            },
+             "meliodas": {
+                senha: "pingente",
+                nome: "Meliodas Souza",
+                classe: "Tank | Gelo",
+                status: { HP: 0, Mente: 0, Pools: 0, Vitalidade: 0, Sorte: 0, Velocidade: 0 }
+            },
+
+         "marco": {
+                senha: "marco",
+                nome: "marco",
+                classe: "marco",
+                status: { HP: 0, Mente: 0, Pools: 0, Vitalidade: 0, Sorte: 0, Velocidade: 0 }
             }
         };
 
-        // Elementos da página
         const formLogin = document.getElementById('formLogin');
         const telaLogin = document.getElementById('telaLogin');
         const telaPainel = document.getElementById('telaPainel');
 
-        // Evento de Login
+        const playlist = ["revirie.mp3", "Pbtheme.mp3", "oldobbyastd.mp3", "problems.mp3"];
+        let musicaAtualIndex = 0;
+        const music = document.getElementById("bgmusic");
+
+        function tocarProxima() {
+            musicaAtualIndex++;
+            if (musicaAtualIndex >= playlist.length) {
+                musicaAtualIndex = 0;
+            }
+            music.src = playlist[musicaAtualIndex];
+            music.play().catch(err => console.log("Erro ao tocar próxima música:", err));
+        }
+
+        music.addEventListener("ended", tocarProxima);
+
         formLogin.addEventListener('submit', function(event) {
             event.preventDefault();
-            
             const usuarioDigitado = document.getElementById('usuario').value.toLowerCase().trim();
             const senhaDigitada = document.getElementById('senha').value;
-
-            // Verifica se o usuário existe no código
             const personagem = bancoPersonagens[usuarioDigitado];
 
             if (personagem && personagem.senha === senhaDigitada) {
@@ -105,40 +133,33 @@
             }
         });
 
-        // Preenche o flashcard dinamicamente
         function carregarPersonagem(p) {
-    document.getElementById('cardNome').innerText = p.nome;
-    document.getElementById('cardClasse').innerText = p.classe;
+            document.getElementById('cardNome').innerText = p.nome;
+            document.getElementById('cardClasse').innerText = p.classe;
 
-    document.getElementById('valForca').value = p.status.forca;
-    document.getElementById('valDestreza').value = p.status.destreza;
-    document.getElementById('valInteligencia').value = p.status.inteligencia;
-    document.getElementById('valVida').value = p.status.vida;
+            document.getElementById('valHP').value = p.status.HP;
+            document.getElementById('valMente').value = p.status.Mente;
+            document.getElementById('valConstituicao').value = p.status.Pools;
+            document.getElementById('valVitalidade').value = p.status.Vitalidade;
+            document.getElementById('valSorte').value = p.status.Sorte;
+            document.getElementById('valVelocidade').value = p.status.Velocidade;
 
-    // Alterna as telas
-    telaLogin.classList.add('oculto');
-    telaPainel.classList.remove('oculto');
-
-
-            // Alterna as telas mudando a classe CSS
             telaLogin.classList.add('oculto');
             telaPainel.classList.remove('oculto');
         }
 
-        // Evento de Logout
         function fazerLogout() {
             document.getElementById('formLogin').reset();
             telaPainel.classList.add('oculto');
             telaLogin.classList.remove('oculto');
         }
 
-        // Música ao clicar
-
         window.addEventListener("click", () => {
-            const music = document.getElementById("bgmusic");
-            music.muted = false;
-            music.play();
-           } ) 
+            if (music.muted) {
+                music.muted = false;
+                music.play().catch(err => console.log("Áudio ainda bloqueado pelo navegador:", err));
+            }
+        }, { once: true });
     </script>
 </body>
 </html>
