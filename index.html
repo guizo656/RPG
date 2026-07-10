@@ -27,10 +27,26 @@
 
     <div id="telaPainel" class="container oculto">
         <div class="flashcard">
-            <h2 id="cardNome">Nome</h2>
+            <div class="header-card">
+                <h2 id="cardNome">Nome</h2>
+                <button type="button" class="btn-hab" onclick="toggleHabilidades()">Habilidades</button>
+            </div>
+            
             <div id="cardClasse" class="classe">Classe</div>
             
+            <div id="secaoHabilidades" class="secao-hab-fechada">
+                <h3>Minhas Habilidades:</h3>
+                <div id="listaHabilidades">
+                    </div>
+            </div>
+            
             <div class="status-group">
+                <!-- Status de Level adicionado aqui -->
+                <div class="status-item" style="grid-column: span 2; border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 10px; margin-bottom: 5px;">
+                    <strong><span>LEVEL:</span></strong>
+                    <input type="number" id="valLevel" min="1" inputmode="numeric" pattern="[0-9]*" style="font-weight: bold; color: #fbbf24;">
+                </div>
+
                 <div class="status-item">
                     <span>HP:</span>
                     <input type="number" id="valHP" min="0" inputmode="numeric" pattern="[0-9]*">
@@ -66,40 +82,69 @@
     </div>
 
     <script>
-        // BANCO DE DADOS 
+        // BANCO DE DADOS ATUALIZADO: Incluído a propriedade Level nos status de cada personagem
         const bancoPersonagens = {
             "pisca": { 
                 senha: "maconha",
                 nome: "Pisca de Marco",
                 classe: "DPS | Vidro",
-                status: { HP: 0, Mente: 0, Pools: 0, Vitalidade: 0, Sorte: 0, Velocidade: 0 }
+                status: { Level: 1, HP: 65, Mente: 17, Constituicao: 10, Vitalidade: 17, Sorte: 9, Velocidade: 9 },
+                habilidades: [
+                    { nome: "Adaga de Vidro", desc: "Aumenta em + 5 mente (1 de vitalidade)." },
+                    { nome: "Pó de diamante", desc: "Micros pedaços de vidro: Dano baixo (+2) em area (3 de vitalidade) " },
+                    { nome: "Prisão de vidro temperado", desc: "Causa silêncio a 1 único inimigo. Aumenta dano recebido por Cortina de fumaça em +3 (5 de vitalidade)."},
+                    { nome: "Cortina de fumaça", desc: "Libera uma cortina de fumaça que causa 3 de dano independente da constituição do inimigo (4 de vitalidade)" }
+                ]
             },
-            "gelado": {
-                senha: "geladinho",
-                nome: "Gelado",
-                classe: "A definir",
-                status: { HP: 0, Mente: 0, Pools: 0, Vitalidade: 0, Sorte: 0, Velocidade: 0 }
+            "khallebhi": {
+                senha: "jordans",
+                nome: "KhaLLeBhi",
+                classe: "Penalizador | Raio roxo",
+                status: { Level: 1, HP: 65, Mente: 9, Constituicao: 9, Vitalidade: 17, Sorte: 10, Velocidade: 17 },
+                habilidades: [
+                    { nome: "Grito Fantasmal", desc: "Dano baixo a todos os inimigos, role um D6 para cada inimigo, se resultado for 4 ou +, medo ao inimigo ( Pode aflingir no máximo 2 alvos por turno ) (5 de vitalidade)." },
+                    { nome: "Deslocamento sombrio", desc: "Quando usada sobre úsuario ou aliados, até o próximo turno deste aliado, este não pode ser alvo de ataques inimigos ( Não pode ser usada consecutivamente no mesmo aliado ou si mesmo ) (5 de vitalidade)." },
+                    { nome: "Aura de definhamento", desc: "Dano baixo a um inimigo, todo o dano causado retorna como Hp (2 de vitalidade)." },
+                    { nome: "Presença incomoda", desc: "Você pode negar tomar um crítico de inimigo uma vez por combate." }
+                ]
             },
             "kendiine": {
                 senha: "3x4",
                 nome: "Kendiine",
                 classe: "Sustainer | Raio roxo",
-                status: { HP: 0, Mente: 0, Pools: 0, Vitalidade: 0, Sorte: 0, Velocidade: 0  }
+                status: { Level: 1, HP: 50, Mente: 9, Constituicao: 37, Vitalidade: 10, Sorte: 9, Velocidade: 17 },
+                habilidades: [
+                    { nome: "Operação ultra relampago", desc: "Habilidade rápida: Sempre que um calculo de dano for ocorrer, aumente em 3 os pontos de um aliado ( Constituição, Mente ), funciona no próprio úsuario (2 de vitalidade)." },
+                    { nome: "Remoção de furunculo por choque", desc: "Cria escudo compartilhado, escudo tem 20 de HP. Cooldown de 2 turnos para usar novamente (6 de vitalidade)." },
+                    { nome: "Sonic Boom", desc: "Habilidade de ativamento rápido: Redirecione o ataque de um inimigo. Cooldown de 2 turnos ( Úsuario ) (6 de vitalidade)." },
+                    { nome: "Coração de babuíno", desc: "Cura HP de um único aliado em 10 pontos (1 de vitalidade)." }
+                ]
             },
              "meliodas": {
                 senha: "pingente",
                 nome: "Meliodas Souza",
                 classe: "Tank | Gelo",
-                status: { HP: 0, Mente: 0, Pools: 0, Vitalidade: 0, Sorte: 0, Velocidade: 0 }
+                status: { Level: 1, HP: 94, Mente: 9, Constituicao: 20, Vitalidade: 17, Sorte: 9, Velocidade: 10 },
+                habilidades: [
+                    { nome: "Muralha Glacial", desc: "Erguendo uma barreira de gelo entre o grupo e os inimigos: Concede +4 constiuição para toda a equipe (4 de vitalidade)." },
+                    { nome: "Armadura de inverno", desc: "Reveste o corpo com gelo, aumentando em +6 constituição. Gire um d6, se acaso o resultado por 4 ou +, cause provocar a um inimigo (2 de vitalidade)." },
+                    { nome: "Correntes congelantes", desc: "Lança correntes de gelo. Ao em vez de critar, causa 4 de dano adicional independentemente da constituição inimigo (3 de vitalidade)." },
+                    { nome: "Domínio do zero absoluto", desc: "Qualquer ataque lançado bem sucedido, pode girar um d6, se o resultado for 5 ou mais, cause congelamento a um inimigo ( Passiva )." }
+                ]
             },
-
-         "marco": {
-                senha: "marco",
-                nome: "marco",
-                classe: "marco",
-                status: { HP: 0, Mente: 0, Pools: 0, Vitalidade: 0, Sorte: 0, Velocidade: 0 }
+            "necrose": {
+                senha: "agulha",
+                nome: "Necrose",
+                classe: "Porradeiro | Dá porrada",
+                status: { Level: 1, HP: 100, Mente: 22, Constituicao: 15, Vitalidade: 17, Sorte: 17, Velocidade: 9 },
+                habilidades: [
+                    { nome: "Aceleração Cardíaca", desc: "Qualquer buff de mente aumenta adicionalmente +3 passivamente." },
+                    { nome: "Acesso de raiva", desc: "Duas vezes por batalha: Ativação rápida; 1. Ao chegar a um quarto da sua vida, recupere até ter 75% da sua vida, ganhe +10 de mente. Caso caia abaixo de um quarto de vida novamente, ganhe +5 de mente." },
+                    { nome: "Modo-bersercker", desc: "Uma vez por batalha: Ativação rápida: Quando com menos de 50% após uma ativação de acesso de raiva, imune a debuffs, aumenta em 1 chance de critiíco." },
+                    { nome: "Quebra crânio", desc: "Usa um golpe de seu estilo de luta: Dano baixo + contrato de vida ( Ganha +1 de mente para cada 10 HP já perdido ) a um único inimigo (3 de vitalidade)." }
+                ]
             }
-        };
+        }
 
         const formLogin = document.getElementById('formLogin');
         const telaLogin = document.getElementById('telaLogin');
@@ -137,15 +182,62 @@
             document.getElementById('cardNome').innerText = p.nome;
             document.getElementById('cardClasse').innerText = p.classe;
 
+            // Vinculação do valor de Level para a tela
+            document.getElementById('valLevel').value = p.status.Level || 1;
             document.getElementById('valHP').value = p.status.HP;
             document.getElementById('valMente').value = p.status.Mente;
-            document.getElementById('valConstituicao').value = p.status.Pools;
+            document.getElementById('valConstituicao').value = p.status.Constituicao;
             document.getElementById('valVitalidade').value = p.status.Vitalidade;
             document.getElementById('valSorte').value = p.status.Sorte;
             document.getElementById('valVelocidade').value = p.status.Velocidade;
 
+            // Fecha a aba de habilidades por padrão ao logar outro personagem
+            const secaoHab = document.getElementById('secaoHabilidades');
+            secaoHab.className = "secao-hab-fechada";
+
+            // Monta a lista de habilidades estruturada com Tooltips individuais
+            const listaHabilidades = document.getElementById('listaHabilidades');
+            listaHabilidades.innerHTML = ""; 
+            
+            if(p.habilidades && p.habilidades.length > 0) {
+                p.habilidades.forEach(hab => {
+                    // Container de cada Habilidade
+                    const itemHab = document.createElement('div');
+                    itemHab.className = "item-habilidade";
+                    
+                    // Texto com o Nome da Habilidade
+                    const nomeHab = document.createElement('span');
+                    nomeHab.className = "nome-habilidade";
+                    nomeHab.textContent = `⚔️ ${hab.nome}`;
+                    
+                    // Balão com a descrição (Tooltip)
+                    const tooltipDesc = document.createElement('div');
+                    tooltipDesc.className = "hab-tooltip";
+                    tooltipDesc.textContent = hab.desc;
+                    
+                    // Junta as peças
+                    itemHab.appendChild(nomeHab);
+                    itemHab.appendChild(tooltipDesc);
+                    listaHabilidades.appendChild(itemHab);
+                });
+            } else {
+                listaHabilidades.textContent = "Nenhuma habilidade cadastrada.";
+            }
+
             telaLogin.classList.add('oculto');
             telaPainel.classList.remove('oculto');
+        }
+
+        // Função do Clique para Mostrar / Esconder as habilidades permanentemente
+        function toggleHabilidades() {
+            const secaoHab = document.getElementById('secaoHabilidades');
+            if (secaoHab.classList.contains('secao-hab-fechada')) {
+                secaoHab.classList.remove('secao-hab-fechada');
+                secaoHab.classList.add('secao-hab-aberta');
+            } else {
+                secaoHab.classList.remove('secao-hab-aberta');
+                secaoHab.classList.add('secao-hab-fechada');
+            }
         }
 
         function fazerLogout() {

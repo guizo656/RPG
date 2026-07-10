@@ -60,7 +60,7 @@
         .oculto { display: none; }
 
 
-        /* --- CONFIGURAÇÃO PARA MOBILE (SEM ALTERAR CORES) --- */
+       /* --- CONFIGURAÇÃO PARA MOBILE E AJUSTES (SEM ALTERAR CORES) --- */
 
 /* Garante que tudo use a matemática certa de tamanho */
 * {
@@ -77,46 +77,158 @@ input, button {
     display: none !important;
 }
 
-/* Ajustes estruturais que ativam APENAS em telas menores (Celulares) */
+/* --- ESTILOS PADRÃO (DESKTOP) QUE ESTAVAM ABAIXO --- */
+
+.header-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.btn-hab {
+    background-color: #6366f1;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+}
+.btn-hab:hover { background-color: #4f46e5; }
+.btn-hab:active { transform: scale(0.95); }
+
+.secao-hab-fechada { display: none; }
+
+.secao-hab-aberta {
+    display: block;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    padding: 12px;
+    margin: 15px 0;
+    text-align: left;
+}
+.secao-hab-aberta h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+    color: #a5b4fc;
+}
+
+.item-habilidade {
+    position: relative;
+    padding: 8px;
+    margin-bottom: 6px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    cursor: help;
+    transition: background 0.2s;
+}
+.item-habilidade:hover { background: rgba(99, 102, 241, 0.15); }
+.nome-habilidade { font-size: 0.9rem; font-weight: 500; color: #e2e8f0; }
+
+/* Tooltip para Desktop (Aparece ao lado) */
+.hab-tooltip {
+    visibility: hidden;
+    opacity: 0;
+    width: 220px;
+    background-color: #1e293b;
+    color: #f1f5f9;
+    text-align: left;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #475569;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+    font-size: 0.8rem;
+    line-height: 1.4;
+    position: absolute;
+    z-index: 99;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 105%; 
+    transition: opacity 0.2s ease-in-out;
+}
+.item-habilidade:hover .hab-tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* --- MEDIA QUERY RESPONSIVA (MOBILE) --- */
 @media (max-width: 600px) {
     body {
-        padding: 12px;
+        padding: 10px;
+        align-items: flex-start; /* Permite rolar a tela para baixo se o conteúdo for longo */
     }
 
     .container {
         width: 100%;
-        max-width: 100%;
+        max-width: 400px; /* Alarga um pouquinho mais no mobile se a tela permitir */
         padding: 16px;
     }
 
-    /* Aumenta os botões e inputs para facilitar o toque no celular */
     input[type="text"],
     input[type="password"],
     button {
         padding: 14px !important;
-        font-size: 16px !important; /* Impede o zoom automático do iOS ao focar */
+        font-size: 16px !important; /* Impede zoom esquisito no Safari/iOS */
     }
 
-    /* Cria duas colunas para os atributos no celular */
+    /* Grid dos Atributos */
     .status-group {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
+        gap: 12px;
+        padding: 12px;
     }
 
-    /* Ajusta cada caixinha de status */
+    /* Corrige os itens de status para não quebrarem o layout */
     .status-item {
         display: flex;
         flex-direction: column;
         align-items: center;
+        text-align: center;
+        border-bottom: none; /* Remove a linha pontilhada antiga */
+        background: rgba(255, 255, 255, 0.03); /* Dá um leve destaque em cada caixinha */
         padding: 8px;
+        border-radius: 6px;
+        margin: 0;
+    }
+
+    .status-item span {
+        font-size: 0.85rem;
+        margin-bottom: 4px;
     }
 
     .status-item input[type="number"] {
         width: 100%;
-        max-width: 70px;
+        max-width: 80px;
         text-align: center;
         padding: 6px;
-        font-size: 18px;
+        font-size: 16px;
+        margin: 0;
+    }
+
+    /* Adaptação dos Tooltips no Mobile (Virgulam para baixo do nome, já que não tem hover) */
+    .item-habilidade {
+        cursor: default;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .hab-tooltip {
+        position: static; /* Remove o posicionamento absoluto do desktop */
+        visibility: visible; /* Fica sempre visível */
+        opacity: 1;
+        width: 100%;
+        transform: none;
+        margin-top: 6px;
+        background-color: rgba(0, 0, 0, 0.25);
+        border: none;
+        padding: 4px 0 0 0;
+        box-shadow: none;
+        color: #9ca3af; /* Cor levemente cinza para diferenciar do título */
     }
 }
